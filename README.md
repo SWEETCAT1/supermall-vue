@@ -1,19 +1,11 @@
 # supermall
+#src项目目录说明
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+assets:静态资源
+components:公共组件
+   common-跨项目组件 content-业务相关的公共组件
+views:大型页面
+router:路由
+store:vuex
+network:网络请求
+common:公共js文件
