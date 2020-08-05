@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-
 const Home = ()=> import('../views/home/Home')
 const Cart = ()=> import('../views/cart/Cart')
 const Category = ()=> import('../views/category/Category')
