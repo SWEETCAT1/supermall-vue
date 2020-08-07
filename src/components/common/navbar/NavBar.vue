@@ -32,5 +32,4 @@
   .center {
     flex: 1;
   }
-
 </style>

@@ -5,6 +5,7 @@
 ####components:公共组件
 >common-跨项目组件
 >content-业务相关的公共组件
+
 ####views:大型页面
 ####router:路由
 ####store:vuex
