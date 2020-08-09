@@ -1,155 +1,115 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <home-swiper :banners="banners"></home-swiper>
-    <home-recommend-view :recommends="recommends"></home-recommend-view>
-    <feature-view></feature-view>
-    <tab-control :titles="['流行','新款','精选']" class="tab-control"></tab-control>
+    <scroll class="content" ref="scroll" :probe-type="3">
+      <home-swiper :banners="banners"></home-swiper>
+      <recommend-view :recommends="recommends"></recommend-view>
+      <feature-view></feature-view>
+      <tab-control :titles="['流行','新款','精选']" class="tab-control"
+                   @tabClick="tabClick"></tab-control>
+      <goods-list :goods="showGoods"></goods-list>
+    </scroll>
+    <back-top @click.native="backClick"></back-top>
 
-    <ul>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-    </ul>
   </div>
 </template>
 
 <script>
   import HomeSwiper from "@/views/home/childComps/HomeSwiper";
-  import HomeRecommendView from "@/views/home/childComps/HomeRecommendView";
+  import RecommendView from "@/views/home/childComps/RecommendView";
   import FeatureView from "@/views/home/childComps/FeatureView";
 
   import NavBar from "@/components/common/navbar/NavBar";
   import TabControl from "@/components/content/tabControl/TabControl";
+  import GoodsList from "@/components/content/goods/GoodsList";
+  import Scroll from "@/components/common/scroll/Scroll";
+  import BackTop from "@/components/content/backTop/BackTop";
 
-  import {getHomeMultidata} from "@/network/home";
+  import {
+    getHomeMultidata,
+    getHomeGoods
+  } from "@/network/home";
+
 
   export default {
     name: "Home",
-    components:{
+    components: {
       NavBar,
       HomeSwiper,
-      HomeRecommendView,
+      RecommendView,
       FeatureView,
-      TabControl
+      TabControl,
+      GoodsList,
+      Scroll,
+      BackTop
     },
-    data(){
+    data() {
       return {
-        banners:[],
-        recommends:[]
+        banners: [],
+        recommends: [],
+        goods: {
+          'pop': {page: 0, list: []},
+          'new': {page: 0, list: []},
+          'sell': {page: 0, list: []},
+        },
+        currentType: 'pop'
       }
     },
     // 创建时立刻请求
     created() {
       // 这里是异步操作！！！
-      getHomeMultidata().then(res =>{
-        console.log(res);
-        this.banners = res.data.banner.list;
-        this.recommends = res.data.recommend.list
-      })}
+      this.getHomeMultidata()
+      this.getHomeGoods('pop')
+      this.getHomeGoods('new')
+      this.getHomeGoods('sell')
+
+    },
+    computed:{
+      showGoods(){
+        return this.goods[this.currentType].list
+      }
+    },
+    methods:{
+      //事件监听
+      tabClick(index){
+        switch (index){
+          case 0:
+            this.currentType = 'pop';break
+          case 1:
+            this.currentType = 'new';break
+          case 2:
+            this.currentType = 'sell';break
+        }
+      },
+
+      backClick(){
+        this.$refs.scroll.scrollTo(0,0,500)
+      },
+
+      //网络请求
+      getHomeMultidata(){
+        getHomeMultidata().then(res => {
+          console.log(res);
+          this.banners = res.data.banner.list;
+          this.recommends = res.data.recommend.list
+        })
+      },
+      getHomeGoods(type){
+        const page = this.goods[type].page + 1
+        getHomeGoods(type,page).then(res=>{
+          console.log(res)
+          this.goods[type].list.push(...res.data.list)
+          this.goods[type].page += 1
+        })
+      }
+    }
   }
 </script>
 
 <style scoped>
   #home {
-    padding-top: 49px;
+    height: 100vh;
+    position: relative;
   }
 
   .home-nav{
@@ -166,6 +126,19 @@
   .tab-control {
     position: sticky;
     top: 44px;
+    z-index: 9;
+  }
+
+  .content{
+    /*height: calc(100% - 93px);*/
+    overflow: hidden;
+    /*margin-top: 44px;*/
+
+    position: absolute;
+    top: 44px;
+    bottom:49px;
+    left:0;
+    right:0;
   }
 
 </style>

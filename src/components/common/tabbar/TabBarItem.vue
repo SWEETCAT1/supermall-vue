@@ -44,7 +44,7 @@
 
 <style scoped>
   .tab-bar-item {
-    flex: 1;
+    flex:1;
     text-align: center;
     height: 49px;
     font-size: 14px;
