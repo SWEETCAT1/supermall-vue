@@ -9,7 +9,7 @@
       <feature-view></feature-view>
       <tab-control :titles="['流行','新款','精选']" ref="tabControl2"
                   @tabClick="tabClick"></tab-control>
-      <goods-list :goods="showGoods"></goods-list>
+      <goods-list :goods="showGoods" @goodsitemLoad="goodsitemLoad"></goods-list>
     </scroll>
     <!--native为自定义标签绑定原生Dom事件-->
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
@@ -32,7 +32,7 @@
     getHomeMultidata,
     getHomeGoods
   } from "@/network/home";
-  import {debounce} from "@/common/utils/utils";
+  import {itemListenerMixin} from "@/common/mixin";
 
 
   export default {
@@ -47,6 +47,7 @@
       Scroll,
       BackTop
     },
+    mixins:[itemListenerMixin],
     data() {
       return {
         banners: [],
@@ -60,7 +61,7 @@
         isShowBackTop:false,
         tabOffsetTop:0,
         isTabFixed:false,
-        saveY:0
+        saveY:0,
       }
     },
     // 创建时立刻请求
@@ -73,11 +74,11 @@
       this.getHomeGoods('sell')
     },
     mounted() {
-      const refresh = debounce(this.$refs.scroll.refresh, 50)
-      // 监听item中图片加载完成
-      this.$bus.$on('itemImageLoad',()=>{
-        refresh()
-      })
+      // const newRefresh = debounce(this.$refs.scroll.refresh, 100)
+      // // 监听item中图片加载完成
+      // this.$bus.$on('itemImageLoad',()=> {
+      //   newRefresh()
+      // })
 
     },
     activated() {
@@ -85,8 +86,10 @@
       this.$refs.scroll.refresh()
     },
     deactivated() {
+      // 保存y值
       this.saveY = this.$refs.scroll.getScrollY()
       // console.log(this.saveY)
+      this.$bus.$off('itemImgLoad', this.itemImgListener)
     },
     computed:{
       showGoods(){
@@ -104,6 +107,7 @@
           case 2:
             this.currentType = 'sell';break
         }
+
         this.$refs.tabControl1.currentIndex = index;
         this.$refs.tabControl2.currentIndex = index;
       },
@@ -119,7 +123,7 @@
       //网络请求
       getHomeMultidata(){
         getHomeMultidata().then(res => {
-          console.log(res);
+          // console.log(res);
           this.banners = res.data.banner.list;
           this.recommends = res.data.recommend.list
         })
@@ -127,7 +131,7 @@
       getHomeGoods(type){
         const page = this.goods[type].page + 1
         getHomeGoods(type,page).then(res=>{
-          console.log(res)
+          // console.log(res)
           // ...的意思是解构遍历res
           this.goods[type].list.push(...res.data.list)
           this.goods[type].page += 1
@@ -142,7 +146,9 @@
         this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
         // console.log(this.$refs.tabControl.$el.offsetTop)
       },
-
+      goodsitemLoad(){
+        this.newRefresh()
+      }
     }
   }
 </script>

@@ -12,13 +12,19 @@ export function getDetail(iid) {
 export class Goods{
   constructor(iteminfo, columns,service) {
     this.title = iteminfo.title;
+    this.desc = iteminfo.desc;
     this.price = iteminfo.price;
     this.oldPrice = iteminfo.oldPrice;
     this.discount = iteminfo.discountDesc;
     this.discountBgColor = iteminfo.discountBgColor;
     this.columns = columns;
-    this.services = service
+    this.services = service;
+    this.realPrice = iteminfo.lowNowPrice;
   }
 }
 
-
+export function getRecommend() {
+  return request({
+    url:'/recommend'
+  })
+}
