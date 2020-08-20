@@ -9,10 +9,10 @@ export default {
 
     if (oldProduct){
       // oldProduct.count += 1
-      context.commit(ADDTOCART,oldProduct)
+      context.commit(ADD_COUNTER,oldProduct)
     } else{
       payload.count = 1
-      context.commit(ADD_COUNTER, payload)
+      context.commit(ADDTOCART, payload)
     }
   }
 }

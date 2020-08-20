@@ -11,6 +11,7 @@ export function getDetail(iid) {
 
 export class Goods{
   constructor(iteminfo, columns,service) {
+    this.iid = iteminfo.iid
     this.title = iteminfo.title;
     this.desc = iteminfo.desc;
     this.price = iteminfo.price;

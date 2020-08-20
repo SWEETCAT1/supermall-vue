@@ -10,7 +10,7 @@
       <detail-comment-info ref="comment" :comment-info="commentInfo"></detail-comment-info>
       <goods-list ref="recommend" :goods="recommends"></goods-list>
     </scroll>
-    <detail-bottom-bar @addCart="addToCart"></detail-bottom-bar>
+    <detail-bottom-bar @addCart="addToCart" @goCart="goCart"></detail-bottom-bar>
   </div>
 </template>
 
@@ -89,16 +89,19 @@
       })
       // 请求推荐数据
       getRecommend().then(res =>{
+        // console.log(res)
         this.recommends = res.data.list
       })
       //给getThemeTopY赋值
       this.getThemeTopY = debounce(()=>{
         // this.themeTopYs = [];
         this.themeTopYs.push(0);
-        this.themeTopYs.push(this.$refs.params.$el.offsetTop);
+        if (this.$refs.params.$el.offsetTop){
+          this.themeTopYs.push(this.$refs.params.$el.offsetTop);
+        }
         this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
         this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
-        console.log(this.themeTopYs)
+        // console.log(this.themeTopYs)
       })
     },
 
@@ -144,11 +147,14 @@
         product.desc = this.goodsInfo.desc
         product.price = this.goodsInfo.realPrice
         product.iid = this.goodsInfo.iid
+        // console.log(product)
         // 将商品添加到购物车
         // this.$store.commit('addCart',product)
         this.$store.dispatch('addCart', product)
+      },
+      goCart(){
+        this.$router.push('/cart')
       }
-
     }
   }
 </script>
