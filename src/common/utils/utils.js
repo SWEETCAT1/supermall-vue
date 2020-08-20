@@ -1,5 +1,5 @@
 // 防抖和节流函数
-export function debounce(func, delay=1000){
+export function debounce(func, delay=200){
   let timer = null
 
   return function (...args){
@@ -10,6 +10,7 @@ export function debounce(func, delay=1000){
   }
 }
 
+//时间格式封装
 export function formatDate(date, fmt){
   if(/(y+)/.test(fmt)) {
     fmt = fmt.replace(RegExp.$1,(date.getFullYear()+'').substr(4 - RegExp.$1.length));

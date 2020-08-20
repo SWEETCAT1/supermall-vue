@@ -9,7 +9,7 @@
       合计:{{totalPrice}}
     </div>
 
-    <div class="calculate">
+    <div class="calculate" @click="calcClick">
       去计算:{{checkLength}}
     </div>
   </div>
@@ -24,6 +24,8 @@
     name: "CartBottomBar",
     components:{
       CheckButton,
+    },
+    created() {
     },
     computed:{
       ...mapGetters(['cartList']),
@@ -53,6 +55,12 @@
           this.cartList.forEach(item => item.checked = false)
         } else {
           this.cartList.forEach(item => item.checked = true)
+        }
+      },
+      calcClick(){
+        if(this.checkLength === 0){
+          // console.log(this.checkLength)
+          this.$toast.show('购物车为空!',2000)
         }
       }
     }
@@ -89,5 +97,6 @@
   .calculate{
     width: 90px;
     text-align: center;
+    background-color: var(--color-tint);
   }
 </style>

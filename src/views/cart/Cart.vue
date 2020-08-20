@@ -28,7 +28,11 @@
     computed:{
       ...mapGetters([
         'cartLength',
+        'cartList'
       ])
+    },
+    created() {
+      // console.log(this.cartList)
     }
   }
 </script>

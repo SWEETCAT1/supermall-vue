@@ -31,6 +31,7 @@
   import {itemListenerMixin} from "@/common/mixin";
   import {debounce} from "@/common/utils/utils";
 
+
   export default {
     name: "Detail",
     components:{
@@ -43,7 +44,7 @@
       DetailParamsInfo,
       DetailCommentInfo,
       GoodsList,
-      DetailBottomBar
+      DetailBottomBar,
     },
     mixins: [itemListenerMixin,],
     data(){
@@ -92,17 +93,7 @@
         // console.log(res)
         this.recommends = res.data.list
       })
-      //给getThemeTopY赋值
-      this.getThemeTopY = debounce(()=>{
-        // this.themeTopYs = [];
-        this.themeTopYs.push(0);
-        if (this.$refs.params.$el.offsetTop){
-          this.themeTopYs.push(this.$refs.params.$el.offsetTop);
-        }
-        this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
-        this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
-        // console.log(this.themeTopYs)
-      })
+
     },
 
     activated() {
@@ -115,9 +106,18 @@
       this.$bus.$off('itemImgLoad', this.itemImgListener)
     },
     updated() {
-
+      //给getThemeTopY赋值
+      this.getThemeTopY = debounce(()=>{
+        // this.themeTopYs = [];
+        this.themeTopYs.push(0);
+        this.themeTopYs.push(this.$refs.params.$el.offsetTop);
+        this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+        this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+        // console.log(this.themeTopYs)
+      })
     },
     methods:{
+      // ...mapGetters(['addCart']),
       detailImageLoad(){
         this.newRefresh()
         //等图片加载完
@@ -150,9 +150,14 @@
         // console.log(product)
         // 将商品添加到购物车
         // this.$store.commit('addCart',product)
-        this.$store.dispatch('addCart', product)
+        this.$store.dispatch('addCart', product).then(res => {
+          // console.log(this.$toast)
+          this.$toast.show(res, 2000)
+        })
+        //
       },
       goCart(){
+        // 跳转购物车
         this.$router.push('/cart')
       }
     }

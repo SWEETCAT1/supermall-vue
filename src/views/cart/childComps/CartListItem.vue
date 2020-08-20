@@ -11,7 +11,11 @@
       <div class="item-desc">{{itemInfo.desc}}</div>
       <div class="info-bottom">
         <div class="item-price left">￥{{itemInfo.price}}</div>
-        <div class="item-count right">x{{itemInfo.count}}</div>
+        <div class="item-count right">
+          <button @click="sub" class="sub-button">-</button>
+          {{itemInfo.count}}
+          <button @click="add" class="add-button">+</button>
+        </div>
       </div>
     </div>
   </div>
@@ -33,9 +37,22 @@
     components:{
       CheckButton
     },
+    computed:{
+    },
     methods:{
       checkClick(){
         this.itemInfo.checked = !this.itemInfo.checked
+      },
+      sub(){
+        console.log(this.itemInfo)
+        if (this.itemInfo.count >= 1){
+          this.itemInfo.count--
+        }
+      },
+      add(){
+        if (this.itemInfo.count >= 0){
+          this.itemInfo.count++
+        }
       }
     }
   }
@@ -90,5 +107,10 @@
   }
   .info-bottom .item-price{
     color: orangered;
+  }
+  .sub-button, .add-button{
+    width: 22px;
+    height: 22px;
+    /*border-radius: 50%;*/
   }
 </style>
