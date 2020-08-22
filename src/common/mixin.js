@@ -8,7 +8,7 @@ export const itemListenerMixin =  {
     }
   },
   mounted() {
-    this.newRefresh = debounce(this.$refs.scroll.refresh, 200)
+    this.newRefresh = debounce(this.$refs.scroll.refresh, 50)
     this.itemImgListener = () => {
       this.newRefresh()
     }

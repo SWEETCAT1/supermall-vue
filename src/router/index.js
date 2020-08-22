@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import GoodsList from "@/components/content/goods/GoodsList";
 
 const Home = ()=> import('../views/home/Home')
 const Cart = ()=> import('../views/cart/Cart')

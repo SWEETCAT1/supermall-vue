@@ -5,7 +5,7 @@
       </div>
       <div slot="center" class="title">
         <div v-for="(item,index) in titles" class="title-item"
-             :class="{active:index === currentIndex}" @click="titleClick(index)" :key="index">
+             :class="{active:index === navcurrentIndex}" @click="titleClick(index)" :key="index">
           {{item}}
         </div>
       </div>
@@ -22,12 +22,12 @@
     data(){
       return {
         titles: ['商品','参数','评论','推荐'],
-        currentIndex:0
+        navcurrentIndex:0
       }
     },
     methods:{
       titleClick(index){
-        this.currentIndex = index;
+        this.navcurrentIndex = index;
         this.$emit('titleClick', index);
       },
       backClick(){
